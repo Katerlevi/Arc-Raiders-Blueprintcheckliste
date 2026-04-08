@@ -3,22 +3,73 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Arc Raiders Checkliste Quadrat mit Namen</title>
+<title>Arc Raiders Checkliste – korrigiert</title>
 <style>
 * { box-sizing: border-box; }
-body { margin: 0; background: #000; color: #fff; font-family: Arial, sans-serif; }
-.wrap { max-width: 1300px; margin: 16px auto; padding: 0 12px 24px; }
-.toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
-button { border: 0; border-radius: 10px; padding: 10px 14px; background: #2141b6; color: white; font-size: 14px; cursor: pointer; }
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+.wrap {
+  max-width: 1300px;
+  margin: 16px auto;
+  padding: 0 12px 24px;
+}
+.toolbar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: #2141b6;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
 button:hover { filter: brightness(1.08); }
-.hint { opacity: .9; font-size: 14px; }
-.board { position: relative; width: 100%; aspect-ratio: 1 / 1; background: url('arc_blueprints_quadrat_mit_namen.png') center/contain no-repeat; user-select: none; }
-.cell { position: absolute; border: 2px solid transparent; border-radius: 18px; background: transparent; cursor: pointer; }
-.cell:hover { border-color: rgba(91, 255, 127, 0.45); background: rgba(91, 255, 127, 0.08); }
+.hint {
+  opacity: .9;
+  font-size: 14px;
+}
+.board {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: url('arc_blueprints_quadrat_mit_namen.png') center/contain no-repeat;
+  user-select: none;
+}
+.cell {
+  position: absolute;
+  border: 2px solid transparent;
+  border-radius: 18px;
+  background: transparent;
+  cursor: pointer;
+}
+.cell:hover {
+  border-color: rgba(91, 255, 127, 0.38);
+  background: rgba(91, 255, 127, 0.06);
+}
 .cell.checked::after {
-  content: '✔'; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -54%);
-  color: #4cff6a; font-size: clamp(38px, 4.6vw, 96px); font-weight: 900; line-height: 1;
-  text-shadow: 0 0 8px rgba(76,255,106,.55), 0 2px 4px rgba(0,0,0,.7); pointer-events: none;
+  content: '✔';
+  position: absolute;
+  left: 50%;
+  top: 39%;
+  transform: translate(-50%, -50%);
+  color: #4cff6a;
+  font-size: clamp(34px, 4.2vw, 90px);
+  font-weight: 900;
+  line-height: 1;
+  text-shadow:
+    0 0 8px rgba(76,255,106,.55),
+    0 2px 4px rgba(0,0,0,.7);
+  pointer-events: none;
 }
 </style>
 </head>
@@ -26,20 +77,28 @@ button:hover { filter: brightness(1.08); }
 <div class="wrap">
   <div class="toolbar">
     <button id="reset">Alle Haken löschen</button>
-    <div class="hint">Quadratische Version mit sichtbaren Blueprint-Namen. Klick auf eine Kachel setzt oder entfernt den Haken mittig.</div>
+    <div class="hint">Korrigierte Version: Der Haken sitzt jetzt mittig auf dem eigentlichen Blueprint-Feld und nicht zu tief im Namensbereich.</div>
   </div>
   <div class="board" id="board"></div>
 </div>
 <script>
-const STORAGE_KEY = 'arc_raiders_quadrat_checked_mit_namen_v1';
-const cards = [[58, 58, 260, 260], [336, 58, 260, 260], [614, 58, 260, 260], [892, 58, 260, 260], [1170, 58, 260, 260], [1448, 58, 260, 260], [1726, 58, 260, 260], [2004, 58, 260, 260], [2282, 58, 260, 260], [58, 336, 260, 260], [336, 336, 260, 260], [614, 336, 260, 260], [892, 336, 260, 260], [1170, 336, 260, 260], [1448, 336, 260, 260], [1726, 336, 260, 260], [2004, 336, 260, 260], [2282, 336, 260, 260], [58, 614, 260, 260], [336, 614, 260, 260], [614, 614, 260, 260], [892, 614, 260, 260], [1170, 614, 260, 260], [1448, 614, 260, 260], [1726, 614, 260, 260], [2004, 614, 260, 260], [2282, 614, 260, 260], [58, 892, 260, 260], [336, 892, 260, 260], [614, 892, 260, 260], [892, 892, 260, 260], [1170, 892, 260, 260], [1448, 892, 260, 260], [1726, 892, 260, 260], [2004, 892, 260, 260], [2282, 892, 260, 260], [58, 1170, 260, 260], [336, 1170, 260, 260], [614, 1170, 260, 260], [892, 1170, 260, 260], [1170, 1170, 260, 260], [1448, 1170, 260, 260], [1726, 1170, 260, 260], [2004, 1170, 260, 260], [2282, 1170, 260, 260], [58, 1448, 260, 260], [336, 1448, 260, 260], [614, 1448, 260, 260], [892, 1448, 260, 260], [1170, 1448, 260, 260], [1448, 1448, 260, 260], [1726, 1448, 260, 260], [2004, 1448, 260, 260], [2282, 1448, 260, 260], [58, 1726, 260, 260], [336, 1726, 260, 260], [614, 1726, 260, 260], [892, 1726, 260, 260], [1170, 1726, 260, 260], [1448, 1726, 260, 260], [1726, 1726, 260, 260], [2004, 1726, 260, 260], [2282, 1726, 260, 260], [58, 2004, 260, 260], [336, 2004, 260, 260], [614, 2004, 260, 260], [892, 2004, 260, 260], [1170, 2004, 260, 260], [1448, 2004, 260, 260], [1726, 2004, 260, 260], [2004, 2004, 260, 260], [2282, 2004, 260, 260], [58, 2282, 260, 260], [336, 2282, 260, 260], [614, 2282, 260, 260], [892, 2282, 260, 260], [1170, 2282, 260, 260]];
+const STORAGE_KEY = 'arc_raiders_quadrat_checked_mit_namen_v2';
+const cards = [[58, 336, 260, 260], [336, 336, 260, 260], [614, 336, 260, 260], [892, 336, 260, 260], [1170, 336, 260, 260], [1448, 336, 260, 260], [1726, 336, 260, 260], [2004, 336, 260, 260], [2282, 336, 260, 260], [58, 614, 260, 260], [336, 614, 260, 260], [614, 614, 260, 260], [892, 614, 260, 260], [1170, 614, 260, 260], [1448, 614, 260, 260], [1726, 614, 260, 260], [2004, 614, 260, 260], [2282, 614, 260, 260], [58, 892, 260, 260], [336, 892, 260, 260], [614, 892, 260, 260], [892, 892, 260, 260], [1170, 892, 260, 260], [1448, 892, 260, 260], [1726, 892, 260, 260], [2004, 892, 260, 260], [2282, 892, 260, 260], [58, 1170, 260, 260], [336, 1170, 260, 260], [614, 1170, 260, 260], [892, 1170, 260, 260], [1170, 1170, 260, 260], [1448, 1170, 260, 260], [1726, 1170, 260, 260], [2004, 1170, 260, 260], [2282, 1170, 260, 260], [58, 1448, 260, 260], [336, 1448, 260, 260], [614, 1448, 260, 260], [892, 1448, 260, 260], [1170, 1448, 260, 260], [1448, 1448, 260, 260], [1726, 1448, 260, 260], [2004, 1448, 260, 260], [2282, 1448, 260, 260], [58, 1726, 260, 260], [336, 1726, 260, 260], [614, 1726, 260, 260], [892, 1726, 260, 260], [1170, 1726, 260, 260], [1448, 1726, 260, 260], [1726, 1726, 260, 260], [2004, 1726, 260, 260], [2282, 1726, 260, 260], [58, 2004, 260, 260], [336, 2004, 260, 260], [614, 2004, 260, 260], [892, 2004, 260, 260], [1170, 2004, 260, 260]];
 const board = document.getElementById('board');
+
 function loadState() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
-  catch { return {}; }
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  } catch {
+    return {};
+  }
 }
-function saveState(state) { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function saveState(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
 let state = loadState();
+
 cards.forEach((card, index) => {
   const [x, y, w, h] = card;
   const cell = document.createElement('div');
@@ -48,15 +107,23 @@ cards.forEach((card, index) => {
   cell.style.top = (y / 2600 * 100) + '%';
   cell.style.width = (w / 2600 * 100) + '%';
   cell.style.height = (h / 2600 * 100) + '%';
+
   if (state[index]) cell.classList.add('checked');
+
   cell.addEventListener('click', () => {
     state[index] = !state[index];
-    if (state[index]) cell.classList.add('checked');
-    else { cell.classList.remove('checked'); delete state[index]; }
+    if (state[index]) {
+      cell.classList.add('checked');
+    } else {
+      cell.classList.remove('checked');
+      delete state[index];
+    }
     saveState(state);
   });
+
   board.appendChild(cell);
 });
+
 document.getElementById('reset').addEventListener('click', () => {
   state = {};
   saveState(state);
