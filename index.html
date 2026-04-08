@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Arc Raiders Checkliste – korrigiert</title>
+<title>Arc Raiders Checkliste – exakt markiert</title>
 <style>
 * { box-sizing: border-box; }
 body {
@@ -48,22 +48,22 @@ button:hover { filter: brightness(1.08); }
 .cell {
   position: absolute;
   border: 2px solid transparent;
-  border-radius: 18px;
+  border-radius: 14px;
   background: transparent;
   cursor: pointer;
 }
 .cell:hover {
-  border-color: rgba(91, 255, 127, 0.38);
-  background: rgba(91, 255, 127, 0.06);
+  border-color: rgba(91, 255, 127, 0.45);
+  background: rgba(91, 255, 127, 0.08);
 }
 .cell.checked::after {
   content: '✔';
   position: absolute;
   left: 50%;
-  top: 39%;
+  top: 37%;
   transform: translate(-50%, -50%);
   color: #4cff6a;
-  font-size: clamp(34px, 4.2vw, 90px);
+  font-size: clamp(34px, 4vw, 88px);
   font-weight: 900;
   line-height: 1;
   text-shadow:
@@ -77,21 +77,18 @@ button:hover { filter: brightness(1.08); }
 <div class="wrap">
   <div class="toolbar">
     <button id="reset">Alle Haken löschen</button>
-    <div class="hint">Korrigierte Version: Der Haken sitzt jetzt mittig auf dem eigentlichen Blueprint-Feld und nicht zu tief im Namensbereich.</div>
+    <div class="hint">Diese Version ist auf dein aktuelles 2048×2048-Bild kalibriert. Alle oberen Felder sind jetzt mit eigenen exakten Klickzonen versehen.</div>
   </div>
   <div class="board" id="board"></div>
 </div>
 <script>
-const STORAGE_KEY = 'arc_raiders_quadrat_checked_mit_namen_v2';
-const cards = [[58, 336, 260, 260], [336, 336, 260, 260], [614, 336, 260, 260], [892, 336, 260, 260], [1170, 336, 260, 260], [1448, 336, 260, 260], [1726, 336, 260, 260], [2004, 336, 260, 260], [2282, 336, 260, 260], [58, 614, 260, 260], [336, 614, 260, 260], [614, 614, 260, 260], [892, 614, 260, 260], [1170, 614, 260, 260], [1448, 614, 260, 260], [1726, 614, 260, 260], [2004, 614, 260, 260], [2282, 614, 260, 260], [58, 892, 260, 260], [336, 892, 260, 260], [614, 892, 260, 260], [892, 892, 260, 260], [1170, 892, 260, 260], [1448, 892, 260, 260], [1726, 892, 260, 260], [2004, 892, 260, 260], [2282, 892, 260, 260], [58, 1170, 260, 260], [336, 1170, 260, 260], [614, 1170, 260, 260], [892, 1170, 260, 260], [1170, 1170, 260, 260], [1448, 1170, 260, 260], [1726, 1170, 260, 260], [2004, 1170, 260, 260], [2282, 1170, 260, 260], [58, 1448, 260, 260], [336, 1448, 260, 260], [614, 1448, 260, 260], [892, 1448, 260, 260], [1170, 1448, 260, 260], [1448, 1448, 260, 260], [1726, 1448, 260, 260], [2004, 1448, 260, 260], [2282, 1448, 260, 260], [58, 1726, 260, 260], [336, 1726, 260, 260], [614, 1726, 260, 260], [892, 1726, 260, 260], [1170, 1726, 260, 260], [1448, 1726, 260, 260], [1726, 1726, 260, 260], [2004, 1726, 260, 260], [2282, 1726, 260, 260], [58, 2004, 260, 260], [336, 2004, 260, 260], [614, 2004, 260, 260], [892, 2004, 260, 260], [1170, 2004, 260, 260]];
+const STORAGE_KEY = 'arc_raiders_quadrat_exakt_v3';
+const cards = [[24, 42, 190, 187], [247, 42, 190, 187], [470, 42, 190, 187], [693, 42, 190, 187], [916, 42, 190, 187], [1139, 42, 190, 187], [1362, 42, 190, 187], [1585, 42, 190, 187], [1808, 42, 190, 187], [2031, 42, 190, 187], [24, 267, 190, 185], [247, 267, 190, 185], [470, 267, 190, 185], [693, 267, 190, 185], [916, 267, 190, 185], [1139, 267, 190, 185], [1362, 267, 190, 185], [1585, 267, 190, 185], [1808, 267, 190, 185], [2031, 267, 190, 185], [24, 492, 190, 187], [247, 492, 190, 187], [470, 492, 190, 187], [693, 492, 190, 187], [916, 492, 190, 187], [1139, 492, 190, 187], [1362, 492, 190, 187], [1585, 492, 190, 187], [1808, 492, 190, 187], [2031, 492, 190, 187], [24, 717, 190, 187], [247, 717, 190, 187], [470, 717, 190, 187], [693, 717, 190, 187], [916, 717, 190, 187], [1139, 717, 190, 187], [1362, 717, 190, 187], [1585, 717, 190, 187], [1808, 717, 190, 187], [2031, 717, 190, 187], [24, 941, 190, 187], [247, 941, 190, 187], [470, 941, 190, 187], [693, 941, 190, 187], [916, 941, 190, 187], [1139, 941, 190, 187], [1362, 941, 190, 187], [1585, 941, 190, 187], [1808, 941, 190, 187], [2031, 941, 190, 187], [24, 1167, 190, 186], [247, 1167, 190, 186], [470, 1167, 190, 186], [693, 1167, 190, 186], [916, 1167, 190, 186], [1139, 1167, 190, 186], [1362, 1167, 190, 186], [1585, 1167, 190, 186], [1808, 1167, 190, 186], [2031, 1167, 190, 186], [24, 1376, 190, 196], [247, 1376, 190, 196], [470, 1376, 190, 196], [693, 1376, 190, 196], [916, 1376, 190, 196], [1139, 1376, 190, 196], [1362, 1376, 190, 196], [1585, 1376, 190, 196], [1808, 1376, 190, 196], [2031, 1376, 190, 196], [24, 1602, 190, 188], [247, 1602, 190, 188], [470, 1602, 190, 188], [693, 1602, 190, 188], [916, 1602, 190, 188], [1139, 1602, 190, 188], [1362, 1602, 190, 188], [1585, 1602, 190, 188], [1808, 1602, 190, 188], [2031, 1602, 190, 188], [24, 1827, 190, 183], [247, 1827, 190, 183], [470, 1827, 190, 183], [693, 1827, 190, 183], [916, 1827, 190, 183]];
 const board = document.getElementById('board');
 
 function loadState() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-  } catch {
-    return {};
-  }
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch { return {}; }
 }
 function saveState(state) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -103,10 +100,10 @@ cards.forEach((card, index) => {
   const [x, y, w, h] = card;
   const cell = document.createElement('div');
   cell.className = 'cell';
-  cell.style.left = (x / 2600 * 100) + '%';
-  cell.style.top = (y / 2600 * 100) + '%';
-  cell.style.width = (w / 2600 * 100) + '%';
-  cell.style.height = (h / 2600 * 100) + '%';
+  cell.style.left = (x / 2048 * 100) + '%';
+  cell.style.top = (y / 2048 * 100) + '%';
+  cell.style.width = (w / 2048 * 100) + '%';
+  cell.style.height = (h / 2048 * 100) + '%';
 
   if (state[index]) cell.classList.add('checked');
 
