@@ -3,51 +3,189 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Arc Raiders Blueprint-Checkliste</title>
+<title>Arc Raiders Checkliste + Runden</title>
 <style>
 * { box-sizing: border-box; }
-body { margin: 0; background: #000; color: #fff; font-family: Arial, sans-serif; }
-.wrap { max-width: 1300px; margin: 16px auto; padding: 0 12px 24px; }
-.toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
-button { border: 0; border-radius: 10px; padding: 10px 14px; background: #2141b6; color: white; font-size: 14px; cursor: pointer; }
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+.wrap {
+  max-width: 1320px;
+  margin: 16px auto;
+  padding: 0 12px 24px;
+}
+.topbar {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.panel {
+  background: rgba(0,0,0,.78);
+  border-radius: 18px;
+  padding: 14px 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.28);
+}
+.grow {
+  flex: 1 1 340px;
+}
+.counterbox {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 92px;
+}
+.counterbox .value {
+  font-size: 52px;
+  font-weight: 900;
+  line-height: 1;
+  color: #4cff6a;
+  text-shadow: 0 0 10px rgba(76,255,106,.35);
+}
+.counterbox .label {
+  font-size: 30px;
+  font-weight: 700;
+  opacity: .96;
+}
+.counterbox .sub {
+  font-size: 16px;
+  opacity: .82;
+}
+.controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+button {
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  background: #2141b6;
+  color: white;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+}
 button:hover { filter: brightness(1.08); }
-.hint { opacity: .9; font-size: 14px; }
-.status { margin-left: auto; font-size: 26px; font-weight: 900; padding: 12px 18px; border-radius: 14px; background: rgba(0,0,0,.72); }
-.status .value { color: #4cff6a; }
-.board { position: relative; width: 100%; aspect-ratio: 1 / 1; background: url('arc_blueprints_quadrat_mit_namen.png') center/contain no-repeat; user-select: none; }
-.cell { position: absolute; border: 2px solid transparent; border-radius: 14px; background: transparent; cursor: pointer; }
-.cell:hover { border-color: rgba(91,255,127,.45); background: rgba(91,255,127,.08); }
+button.reset {
+  background: #353535;
+}
+.smallnote {
+  font-size: 14px;
+  opacity: .82;
+  margin-top: 8px;
+}
+.board {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: url('arc_blueprints_quadrat_mit_namen.png') center/contain no-repeat;
+  user-select: none;
+}
+.cell {
+  position: absolute;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  background: transparent;
+  cursor: pointer;
+}
+.cell:hover {
+  border-color: rgba(91,255,127,.45);
+  background: rgba(91,255,127,.08);
+}
 .cell.checked::after {
-  content: '✔'; position: absolute; left: 50%; top: 37%; transform: translate(-50%, -50%);
-  color: #4cff6a; font-size: clamp(34px, 4vw, 88px); font-weight: 900; line-height: 1;
-  text-shadow: 0 0 8px rgba(76,255,106,.55), 0 2px 4px rgba(0,0,0,.7); pointer-events: none;
+  content: '✔';
+  position: absolute;
+  left: 50%;
+  top: 37%;
+  transform: translate(-50%, -50%);
+  color: #4cff6a;
+  font-size: clamp(34px, 4vw, 88px);
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 0 8px rgba(76,255,106,.55), 0 2px 4px rgba(0,0,0,.7);
+  pointer-events: none;
 }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="toolbar">
-    <button id="reset">Alle Haken löschen</button>
-    <div class="hint">Haken setzen erhöht den Fortschritt. Haken entfernen zieht ihn wieder ab.</div>
-    <div class="status"><span class="value" id="counter">0</span> / 77</div>
+  <div class="topbar">
+    <div class="panel grow">
+      <div class="counterbox">
+        <div class="value" id="checkValue">0</div>
+        <div>
+          <div class="label">/ 77</div>
+          <div class="sub">Blueprints</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button id="resetChecks" class="reset">Alle Haken löschen</button>
+      </div>
+      <div class="smallnote">Haken setzen erhöht den Fortschritt. Haken entfernen zieht ihn wieder ab.</div>
+    </div>
+
+    <div class="panel grow">
+      <div class="counterbox">
+        <div class="value" id="roundValue">0</div>
+        <div>
+          <div class="label">Runden</div>
+          <div class="sub">manuell mit + und -</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button id="minus">-</button>
+        <button id="resetRounds" class="reset">Reset</button>
+        <button id="plus">+</button>
+      </div>
+      <div class="smallnote">Der Rundenzähler startet bei 0 und kann nicht unter 0 fallen.</div>
+    </div>
   </div>
+
   <div class="board" id="board"></div>
 </div>
+
 <script>
-const STORAGE_KEY = "arc_raiders_blueprint_checks_v77";
+const CHECK_KEY = "arc_raiders_blueprint_checks_combined_v1";
+const ROUND_KEY = "arc_raiders_rounds_combined_v1";
 const cards = [[24, 24, 201, 201], [247, 24, 201, 201], [470, 24, 201, 201], [693, 24, 201, 201], [916, 24, 201, 201], [1139, 24, 201, 201], [1362, 24, 201, 201], [1585, 24, 201, 201], [1808, 24, 201, 201], [24, 247, 201, 201], [247, 247, 201, 201], [470, 247, 201, 201], [693, 247, 201, 201], [916, 247, 201, 201], [1139, 247, 201, 201], [1362, 247, 201, 201], [1585, 247, 201, 201], [1808, 247, 201, 201], [24, 470, 201, 201], [247, 470, 201, 201], [470, 470, 201, 201], [693, 470, 201, 201], [916, 470, 201, 201], [1139, 470, 201, 201], [1362, 470, 201, 201], [1585, 470, 201, 201], [1808, 470, 201, 201], [24, 693, 201, 201], [247, 693, 201, 201], [470, 693, 201, 201], [693, 693, 201, 201], [916, 693, 201, 201], [1139, 693, 201, 201], [1362, 693, 201, 201], [1585, 693, 201, 201], [1808, 693, 201, 201], [24, 916, 201, 201], [247, 916, 201, 201], [470, 916, 201, 201], [693, 916, 201, 201], [916, 916, 201, 201], [1139, 916, 201, 201], [1362, 916, 201, 201], [1585, 916, 201, 201], [1808, 916, 201, 201], [24, 1139, 201, 201], [247, 1139, 201, 201], [470, 1139, 201, 201], [693, 1139, 201, 201], [916, 1139, 201, 201], [1139, 1139, 201, 201], [1362, 1139, 201, 201], [1585, 1139, 201, 201], [1808, 1139, 201, 201], [24, 1362, 201, 201], [247, 1362, 201, 201], [470, 1362, 201, 201], [693, 1362, 201, 201], [916, 1362, 201, 201], [1139, 1362, 201, 201], [1362, 1362, 201, 201], [1585, 1362, 201, 201], [1808, 1362, 201, 201], [24, 1585, 201, 201], [247, 1585, 201, 201], [470, 1585, 201, 201], [693, 1585, 201, 201], [916, 1585, 201, 201], [1139, 1585, 201, 201], [1362, 1585, 201, 201], [1585, 1585, 201, 201], [1808, 1585, 201, 201], [24, 1808, 201, 201], [247, 1808, 201, 201], [470, 1808, 201, 201], [693, 1808, 201, 201], [916, 1808, 201, 201]];
 const board = document.getElementById('board');
-const counterEl = document.getElementById('counter');
 
-function loadState() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+function loadChecks() {
+  try { return JSON.parse(localStorage.getItem(CHECK_KEY)) || {}; }
   catch { return {}; }
 }
-function saveState(state) { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-function checkedCount(state) { return Object.values(state).filter(Boolean).length; }
-function renderCounter() { counterEl.textContent = String(checkedCount(state)); }
+function saveChecks(state) {
+  localStorage.setItem(CHECK_KEY, JSON.stringify(state));
+}
+function checkedCount(state) {
+  return Object.values(state).filter(Boolean).length;
+}
 
-let state = loadState();
+function loadRounds() {
+  const raw = localStorage.getItem(ROUND_KEY);
+  const num = Number(raw);
+  if (!Number.isFinite(num)) return 0;
+  return Math.max(0, Math.round(num));
+}
+function saveRounds(value) {
+  localStorage.setItem(ROUND_KEY, String(value));
+}
+
+let checkState = loadChecks();
+let rounds = loadRounds();
+
+function renderCheckCounter() {
+  document.getElementById('checkValue').textContent = String(checkedCount(checkState));
+}
+function renderRounds() {
+  document.getElementById('roundValue').textContent = String(rounds);
+}
 
 cards.forEach((card, index) => {
   const [x, y, w, h] = card;
@@ -57,25 +195,51 @@ cards.forEach((card, index) => {
   cell.style.top = (y / 2048 * 100) + '%';
   cell.style.width = (w / 2048 * 100) + '%';
   cell.style.height = (h / 2048 * 100) + '%';
-  if (state[index]) cell.classList.add('checked');
+
+  if (checkState[index]) cell.classList.add('checked');
+
   cell.addEventListener('click', () => {
-    state[index] = !state[index];
-    if (state[index]) cell.classList.add('checked');
-    else { cell.classList.remove('checked'); delete state[index]; }
-    saveState(state);
-    renderCounter();
+    checkState[index] = !checkState[index];
+    if (checkState[index]) {
+      cell.classList.add('checked');
+    } else {
+      cell.classList.remove('checked');
+      delete checkState[index];
+    }
+    saveChecks(checkState);
+    renderCheckCounter();
   });
+
   board.appendChild(cell);
 });
 
-document.getElementById('reset').addEventListener('click', () => {
-  state = {};
-  saveState(state);
+document.getElementById('resetChecks').addEventListener('click', () => {
+  checkState = {};
+  saveChecks(checkState);
   document.querySelectorAll('.cell.checked').forEach(el => el.classList.remove('checked'));
-  renderCounter();
+  renderCheckCounter();
 });
 
-renderCounter();
+document.getElementById('plus').addEventListener('click', () => {
+  rounds += 1;
+  saveRounds(rounds);
+  renderRounds();
+});
+
+document.getElementById('minus').addEventListener('click', () => {
+  rounds = Math.max(0, rounds - 1);
+  saveRounds(rounds);
+  renderRounds();
+});
+
+document.getElementById('resetRounds').addEventListener('click', () => {
+  rounds = 0;
+  saveRounds(rounds);
+  renderRounds();
+});
+
+renderCheckCounter();
+renderRounds();
 </script>
 </body>
 </html>
