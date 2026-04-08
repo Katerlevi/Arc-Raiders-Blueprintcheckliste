@@ -3,73 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Arc Raiders Checkliste – exakt markiert</title>
+<title>Arc Raiders Blueprint-Checkliste</title>
 <style>
 * { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: #000;
-  color: #fff;
-  font-family: Arial, sans-serif;
-}
-.wrap {
-  max-width: 1300px;
-  margin: 16px auto;
-  padding: 0 12px 24px;
-}
-.toolbar {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-button {
-  border: 0;
-  border-radius: 10px;
-  padding: 10px 14px;
-  background: #2141b6;
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
-}
+body { margin: 0; background: #000; color: #fff; font-family: Arial, sans-serif; }
+.wrap { max-width: 1300px; margin: 16px auto; padding: 0 12px 24px; }
+.toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+button { border: 0; border-radius: 10px; padding: 10px 14px; background: #2141b6; color: white; font-size: 14px; cursor: pointer; }
 button:hover { filter: brightness(1.08); }
-.hint {
-  opacity: .9;
-  font-size: 14px;
-}
-.board {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  background: url('arc_blueprints_quadrat_mit_namen.png') center/contain no-repeat;
-  user-select: none;
-}
-.cell {
-  position: absolute;
-  border: 2px solid transparent;
-  border-radius: 14px;
-  background: transparent;
-  cursor: pointer;
-}
-.cell:hover {
-  border-color: rgba(91, 255, 127, 0.45);
-  background: rgba(91, 255, 127, 0.08);
-}
+.hint { opacity: .9; font-size: 14px; }
+.status { margin-left: auto; font-size: 26px; font-weight: 900; padding: 12px 18px; border-radius: 14px; background: rgba(0,0,0,.72); }
+.status .value { color: #4cff6a; }
+.board { position: relative; width: 100%; aspect-ratio: 1 / 1; background: url('arc_blueprints_quadrat_mit_namen.png') center/contain no-repeat; user-select: none; }
+.cell { position: absolute; border: 2px solid transparent; border-radius: 14px; background: transparent; cursor: pointer; }
+.cell:hover { border-color: rgba(91,255,127,.45); background: rgba(91,255,127,.08); }
 .cell.checked::after {
-  content: '✔';
-  position: absolute;
-  left: 50%;
-  top: 37%;
-  transform: translate(-50%, -50%);
-  color: #4cff6a;
-  font-size: clamp(34px, 4vw, 88px);
-  font-weight: 900;
-  line-height: 1;
-  text-shadow:
-    0 0 8px rgba(76,255,106,.55),
-    0 2px 4px rgba(0,0,0,.7);
-  pointer-events: none;
+  content: '✔'; position: absolute; left: 50%; top: 37%; transform: translate(-50%, -50%);
+  color: #4cff6a; font-size: clamp(34px, 4vw, 88px); font-weight: 900; line-height: 1;
+  text-shadow: 0 0 8px rgba(76,255,106,.55), 0 2px 4px rgba(0,0,0,.7); pointer-events: none;
 }
 </style>
 </head>
@@ -77,22 +28,24 @@ button:hover { filter: brightness(1.08); }
 <div class="wrap">
   <div class="toolbar">
     <button id="reset">Alle Haken löschen</button>
-    <div class="hint">Diese Version ist auf dein aktuelles 2048×2048-Bild kalibriert. Alle oberen Felder sind jetzt mit eigenen exakten Klickzonen versehen.</div>
+    <div class="hint">Haken setzen erhöht den Fortschritt. Haken entfernen zieht ihn wieder ab.</div>
+    <div class="status"><span class="value" id="counter">0</span> / 77</div>
   </div>
   <div class="board" id="board"></div>
 </div>
 <script>
-const STORAGE_KEY = 'arc_raiders_quadrat_exakt_v3';
-const cards = [[24, 42, 190, 187], [247, 42, 190, 187], [470, 42, 190, 187], [693, 42, 190, 187], [916, 42, 190, 187], [1139, 42, 190, 187], [1362, 42, 190, 187], [1585, 42, 190, 187], [1808, 42, 190, 187], [2031, 42, 190, 187], [24, 267, 190, 185], [247, 267, 190, 185], [470, 267, 190, 185], [693, 267, 190, 185], [916, 267, 190, 185], [1139, 267, 190, 185], [1362, 267, 190, 185], [1585, 267, 190, 185], [1808, 267, 190, 185], [2031, 267, 190, 185], [24, 492, 190, 187], [247, 492, 190, 187], [470, 492, 190, 187], [693, 492, 190, 187], [916, 492, 190, 187], [1139, 492, 190, 187], [1362, 492, 190, 187], [1585, 492, 190, 187], [1808, 492, 190, 187], [2031, 492, 190, 187], [24, 717, 190, 187], [247, 717, 190, 187], [470, 717, 190, 187], [693, 717, 190, 187], [916, 717, 190, 187], [1139, 717, 190, 187], [1362, 717, 190, 187], [1585, 717, 190, 187], [1808, 717, 190, 187], [2031, 717, 190, 187], [24, 941, 190, 187], [247, 941, 190, 187], [470, 941, 190, 187], [693, 941, 190, 187], [916, 941, 190, 187], [1139, 941, 190, 187], [1362, 941, 190, 187], [1585, 941, 190, 187], [1808, 941, 190, 187], [2031, 941, 190, 187], [24, 1167, 190, 186], [247, 1167, 190, 186], [470, 1167, 190, 186], [693, 1167, 190, 186], [916, 1167, 190, 186], [1139, 1167, 190, 186], [1362, 1167, 190, 186], [1585, 1167, 190, 186], [1808, 1167, 190, 186], [2031, 1167, 190, 186], [24, 1376, 190, 196], [247, 1376, 190, 196], [470, 1376, 190, 196], [693, 1376, 190, 196], [916, 1376, 190, 196], [1139, 1376, 190, 196], [1362, 1376, 190, 196], [1585, 1376, 190, 196], [1808, 1376, 190, 196], [2031, 1376, 190, 196], [24, 1602, 190, 188], [247, 1602, 190, 188], [470, 1602, 190, 188], [693, 1602, 190, 188], [916, 1602, 190, 188], [1139, 1602, 190, 188], [1362, 1602, 190, 188], [1585, 1602, 190, 188], [1808, 1602, 190, 188], [2031, 1602, 190, 188], [24, 1827, 190, 183], [247, 1827, 190, 183], [470, 1827, 190, 183], [693, 1827, 190, 183], [916, 1827, 190, 183]];
+const STORAGE_KEY = "arc_raiders_blueprint_checks_v77";
+const cards = [[24, 24, 201, 201], [247, 24, 201, 201], [470, 24, 201, 201], [693, 24, 201, 201], [916, 24, 201, 201], [1139, 24, 201, 201], [1362, 24, 201, 201], [1585, 24, 201, 201], [1808, 24, 201, 201], [24, 247, 201, 201], [247, 247, 201, 201], [470, 247, 201, 201], [693, 247, 201, 201], [916, 247, 201, 201], [1139, 247, 201, 201], [1362, 247, 201, 201], [1585, 247, 201, 201], [1808, 247, 201, 201], [24, 470, 201, 201], [247, 470, 201, 201], [470, 470, 201, 201], [693, 470, 201, 201], [916, 470, 201, 201], [1139, 470, 201, 201], [1362, 470, 201, 201], [1585, 470, 201, 201], [1808, 470, 201, 201], [24, 693, 201, 201], [247, 693, 201, 201], [470, 693, 201, 201], [693, 693, 201, 201], [916, 693, 201, 201], [1139, 693, 201, 201], [1362, 693, 201, 201], [1585, 693, 201, 201], [1808, 693, 201, 201], [24, 916, 201, 201], [247, 916, 201, 201], [470, 916, 201, 201], [693, 916, 201, 201], [916, 916, 201, 201], [1139, 916, 201, 201], [1362, 916, 201, 201], [1585, 916, 201, 201], [1808, 916, 201, 201], [24, 1139, 201, 201], [247, 1139, 201, 201], [470, 1139, 201, 201], [693, 1139, 201, 201], [916, 1139, 201, 201], [1139, 1139, 201, 201], [1362, 1139, 201, 201], [1585, 1139, 201, 201], [1808, 1139, 201, 201], [24, 1362, 201, 201], [247, 1362, 201, 201], [470, 1362, 201, 201], [693, 1362, 201, 201], [916, 1362, 201, 201], [1139, 1362, 201, 201], [1362, 1362, 201, 201], [1585, 1362, 201, 201], [1808, 1362, 201, 201], [24, 1585, 201, 201], [247, 1585, 201, 201], [470, 1585, 201, 201], [693, 1585, 201, 201], [916, 1585, 201, 201], [1139, 1585, 201, 201], [1362, 1585, 201, 201], [1585, 1585, 201, 201], [1808, 1585, 201, 201], [24, 1808, 201, 201], [247, 1808, 201, 201], [470, 1808, 201, 201], [693, 1808, 201, 201], [916, 1808, 201, 201]];
 const board = document.getElementById('board');
+const counterEl = document.getElementById('counter');
 
 function loadState() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
   catch { return {}; }
 }
-function saveState(state) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
+function saveState(state) { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function checkedCount(state) { return Object.values(state).filter(Boolean).length; }
+function renderCounter() { counterEl.textContent = String(checkedCount(state)); }
 
 let state = loadState();
 
@@ -104,20 +57,14 @@ cards.forEach((card, index) => {
   cell.style.top = (y / 2048 * 100) + '%';
   cell.style.width = (w / 2048 * 100) + '%';
   cell.style.height = (h / 2048 * 100) + '%';
-
   if (state[index]) cell.classList.add('checked');
-
   cell.addEventListener('click', () => {
     state[index] = !state[index];
-    if (state[index]) {
-      cell.classList.add('checked');
-    } else {
-      cell.classList.remove('checked');
-      delete state[index];
-    }
+    if (state[index]) cell.classList.add('checked');
+    else { cell.classList.remove('checked'); delete state[index]; }
     saveState(state);
+    renderCounter();
   });
-
   board.appendChild(cell);
 });
 
@@ -125,7 +72,10 @@ document.getElementById('reset').addEventListener('click', () => {
   state = {};
   saveState(state);
   document.querySelectorAll('.cell.checked').forEach(el => el.classList.remove('checked'));
+  renderCounter();
 });
+
+renderCounter();
 </script>
 </body>
 </html>
